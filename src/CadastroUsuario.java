@@ -2,11 +2,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-/**
- * Um programa simples para cadastrar e buscar informações dos usuários usando uma tabela hash.
- */
 public class CadastroUsuario {
-
     public static class Usuario {
         private String nome;
         private String cpf;
@@ -37,20 +33,57 @@ public class CadastroUsuario {
         }
     }
 
+    private Map<String, Usuario> usuarioMap;
+
+    public CadastroUsuario() {
+        usuarioMap = new HashMap<>();
+    }
+
+    public void cadastrarUsuario(String nome, String cpf, String celular, String email) {
+        if (usuarioMap.containsKey(cpf)) {
+            System.out.println("CPF já cadastrado.");
+        } else {
+            Usuario novoUsuario = new Usuario(nome, cpf, celular, email);
+            usuarioMap.put(cpf, novoUsuario);
+            System.out.println("Usuário cadastrado com sucesso.");
+        }
+    }
+
+    public Usuario buscarUsuarioPorCPF(String cpf) {
+        if (usuarioMap.containsKey(cpf)) {
+            return usuarioMap.get(cpf);
+        } else {
+            System.out.println("Usuário não encontrado.");
+            return null;
+        }
+    }
+
+    public void excluirUsuario(String cpf) {
+        if (usuarioMap.containsKey(cpf)) {
+            usuarioMap.remove(cpf);
+            System.out.println("Usuário excluído com sucesso.");
+        } else {
+            System.out.println("Usuário não encontrado.");
+        }
+    }
+
+    public Map<String, Usuario> getUsuarioMap() {
+        return usuarioMap;
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Map<String, Usuario> usuarioMap = new HashMap<>();
+        CadastroUsuario cadastroUsuario = new CadastroUsuario();
 
         boolean sair = false;
 
         while (!sair) {
             System.out.println("Escolha uma opção:");
             System.out.println("1 - Cadastrar usuário");
-            System.out.println("2 - Buscar usuário por nome");
-            System.out.println("3 - Buscar usuário por CPF");
-            System.out.println("4 - Excluir usuário");
-            System.out.println("5 - Ver todos os usuários cadastrados");
-            System.out.println("6 - Sair");
+            System.out.println("2 - Buscar usuário por CPF");
+            System.out.println("3 - Excluir usuário");
+            System.out.println("4 - Ver todos os usuários cadastrados");
+            System.out.println("5 - Sair");
 
             int opcao = scanner.nextInt();
             scanner.nextLine();
@@ -65,83 +98,32 @@ public class CadastroUsuario {
                     String celular = scanner.nextLine();
                     System.out.println("Digite o email:");
                     String email = scanner.nextLine();
-                    cadastrarUsuario(usuarioMap, nome, cpf, celular, email);
+                    cadastroUsuario.cadastrarUsuario(nome, cpf, celular, email);
                     break;
                 case 2:
-                    System.out.println("Digite o nome cadastrado a ser buscado:");
-                    String nomeBusca = scanner.nextLine();
-                    buscarUsuarioPorNome(usuarioMap, nomeBusca);
+                    System.out.println("Digite o CPF do usuário a ser buscado:");
+                    String cpfBusca = scanner.nextLine();
+                    Usuario usuario = cadastroUsuario.buscarUsuarioPorCPF(cpfBusca);
+                    if (usuario != null) {
+                        System.out.println("Usuário encontrado: " + usuario.getNome() + ", CPF: " + usuario.getCpf() + ", Celular: " + usuario.getCelular() + ", Email: " + usuario.getEmail());
+                    }
                     break;
                 case 3:
-                    System.out.println("Digite o CPF a ser buscado:");
-                    String cpfBusca = scanner.nextLine();
-                    buscarUsuarioPorCPF(usuarioMap, cpfBusca);
-                    break;
-                case 4:
                     System.out.println("Digite o CPF do usuário a ser excluído:");
                     String cpfExcluir = scanner.nextLine();
-                    excluirUsuario(usuarioMap, cpfExcluir);
+                    cadastroUsuario.excluirUsuario(cpfExcluir);
+                    break;
+                case 4:
+                    System.out.println("Todos os usuários cadastrados:");
+                    for (Usuario u : cadastroUsuario.getUsuarioMap().values()) {
+                        System.out.println("Nome: " + u.getNome() + ", CPF: " + u.getCpf() + ", Celular: " + u.getCelular() + ", Email: " + u.getEmail());
+                    }
                     break;
                 case 5:
-                    System.out.println("Todos os usuários cadastrados:");
-                    listarUsuarios(usuarioMap);
-                    break;
-                case 6:
                     sair = true;
                     break;
                 default:
                     System.out.println("Opção inválida.");
-            }
-        }
-    }
-
-    public static void cadastrarUsuario(Map<String, Usuario> usuarioMap, String nome, String cpf, String celular, String email) {
-        if (usuarioMap.containsKey(cpf)) {
-            System.out.println("CPF já cadastrado.");
-        } else {
-            Usuario novoUsuario = new Usuario(nome, cpf, celular, email);
-            usuarioMap.put(cpf, novoUsuario);
-            System.out.println("Usuário cadastrado com sucesso.");
-        }
-    }
-
-    public static void buscarUsuarioPorNome(Map<String, Usuario> usuarioMap, String nome) {
-        boolean encontrado = false;
-        for (Usuario usuario : usuarioMap.values()) {
-            if (usuario.getNome().equalsIgnoreCase(nome)) {
-                System.out.println("Nome encontrado: " + nome + ", CPF: " + usuario.getCpf() + ", Celular: " + usuario.getCelular() + ", Email: " + usuario.getEmail());
-                encontrado = true;
-            }
-        }
-        if (!encontrado) {
-            System.out.println("Nome não encontrado.");
-        }
-    }
-
-    public static void buscarUsuarioPorCPF(Map<String, Usuario> usuarioMap, String cpf) {
-        if (usuarioMap.containsKey(cpf)) {
-            Usuario usuario = usuarioMap.get(cpf);
-            System.out.println("Usuário encontrado: " + usuario.getNome() + ", CPF: " + usuario.getCpf() + ", Celular: " + usuario.getCelular() + ", Email: " + usuario.getEmail());
-        } else {
-            System.out.println("Usuário não encontrado.");
-        }
-    }
-
-    public static void excluirUsuario(Map<String, Usuario> usuarioMap, String cpf) {
-        if (usuarioMap.containsKey(cpf)) {
-            usuarioMap.remove(cpf);
-            System.out.println("Usuário excluído com sucesso.");
-        } else {
-            System.out.println("Usuário não encontrado.");
-        }
-    }
-
-    public static void listarUsuarios(Map<String, Usuario> usuarioMap) {
-        if (usuarioMap.isEmpty()) {
-            System.out.println("Nenhum usuário cadastrado.");
-        } else {
-            for (Usuario usuario : usuarioMap.values()) {
-                System.out.println("Nome: " + usuario.getNome() + ", CPF: " + usuario.getCpf() + ", Celular: " + usuario.getCelular() + ", Email: " + usuario.getEmail());
             }
         }
     }
