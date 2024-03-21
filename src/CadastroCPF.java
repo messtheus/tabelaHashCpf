@@ -74,9 +74,9 @@ public class CadastroCPF {
         if (cpfMap.containsKey(cpf)) {
             DadosUsuario usuario = cpfMap.get(cpf);
             System.out.println("CPF encontrado: " + cpf);
-            System.out.println("Nome do usuário: " + usuario.getNome());
-            System.out.println("Email do usuário: " + usuario.getEmail());
-            System.out.println("Telefone do usuário: " + usuario.getTelefone());
+            System.out.println("Nome do usuário: " + usuario.nome());
+            System.out.println("Email do usuário: " + usuario.email());
+            System.out.println("Telefone do usuário: " + usuario.telefone());
         } else {
             System.out.println("CPF não encontrado.");
         }
@@ -86,10 +86,10 @@ public class CadastroCPF {
         boolean encontrado = false;
         for (Map.Entry<String, DadosUsuario> entry : cpfMap.entrySet()) {
             DadosUsuario usuario = entry.getValue();
-            if (usuario.getNome().equalsIgnoreCase(nome)) {
+            if (usuario.nome().equalsIgnoreCase(nome)) {
                 System.out.println("Nome encontrado: " + nome + ", CPF: " + entry.getKey());
-                System.out.println("Email do usuário: " + usuario.getEmail());
-                System.out.println("Telefone do usuário: " + usuario.getTelefone());
+                System.out.println("Email do usuário: " + usuario.email());
+                System.out.println("Telefone do usuário: " + usuario.telefone());
                 encontrado = true;
             }
         }
@@ -112,31 +112,10 @@ public class CadastroCPF {
         for (Map.Entry<String, DadosUsuario> entry : cpfMap.entrySet()) {
             String cpf = entry.getKey();
             DadosUsuario usuario = entry.getValue();
-            System.out.println("CPF: " + cpf + ", Nome: " + usuario.getNome() + ", Email: " + usuario.getEmail() + ", Telefone: " + usuario.getTelefone());
+            System.out.println("CPF: " + cpf + ", Nome: " + usuario.nome() + ", Email: " + usuario.email() + ", Telefone: " + usuario.telefone());
         }
     }
 }
 
-class DadosUsuario {
-    private String nome;
-    private String email;
-    private String telefone;
-
-    public DadosUsuario(String nome, String email, String telefone) {
-        this.nome = nome;
-        this.email = email;
-        this.telefone = telefone;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
+record DadosUsuario(String nome, String email, String telefone) {
 }
